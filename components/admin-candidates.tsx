@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft, Plus, Edit, Trash2, User } from "lucide-react"
-import Image from "next/image"
 
 interface AdminCandidatesProps {
   onBack: () => void
@@ -106,9 +105,7 @@ export function AdminCandidates({ onBack }: AdminCandidatesProps) {
                 </DialogHeader>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="text-white">
-                      Name
-                    </Label>
+                    <Label htmlFor="name" className="text-white">Name</Label>
                     <Input
                       id="name"
                       value={newCandidate.name}
@@ -118,9 +115,7 @@ export function AdminCandidates({ onBack }: AdminCandidatesProps) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="position" className="text-white">
-                      Position
-                    </Label>
+                    <Label htmlFor="position" className="text-white">Position</Label>
                     <Select
                       value={newCandidate.position}
                       onValueChange={(value) => setNewCandidate((prev) => ({ ...prev, position: value }))}
@@ -138,9 +133,7 @@ export function AdminCandidates({ onBack }: AdminCandidatesProps) {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="bio" className="text-white">
-                      Bio
-                    </Label>
+                    <Label htmlFor="bio" className="text-white">Bio</Label>
                     <Textarea
                       id="bio"
                       value={newCandidate.bio}
@@ -151,9 +144,7 @@ export function AdminCandidates({ onBack }: AdminCandidatesProps) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="platform" className="text-white">
-                      Platform
-                    </Label>
+                    <Label htmlFor="platform" className="text-white">Platform</Label>
                     <Textarea
                       id="platform"
                       value={newCandidate.platform}
@@ -181,7 +172,7 @@ export function AdminCandidates({ onBack }: AdminCandidatesProps) {
           </div>
         </div>
 
-        {/* Candidates by Position */}
+        {/* Candidate Sections */}
         <div className="space-y-6">
           {positions.map((position) => (
             <Card key={position.id} className="backdrop-blur-xl bg-red-950/40 border border-red-500/40 shadow-2xl">
@@ -200,45 +191,20 @@ export function AdminCandidates({ onBack }: AdminCandidatesProps) {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {position.candidates.map((candidate) => (
-                      <Card
-                        key={candidate.id}
-                        className="backdrop-blur-lg bg-white/15 border border-white/30 shadow-xl"
-                      >
-                        <CardContent className="p-4">
-                          <div className="flex items-start gap-3">
-                            <Image
-                              src={candidate.photo || "/placeholder.svg"}
-                              alt={candidate.name}
-                              width={60}
-                              height={60}
-                              className="rounded-full object-cover"
-                            />
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-white text-lg mb-1">{candidate.name}</h3>
-                              <p className="text-white/70 text-sm mb-2 line-clamp-2">{candidate.bio}</p>
-                              <p className="text-white/60 text-xs line-clamp-1">{candidate.platform}</p>
+                      <Card key={candidate.id} className="border border-white/10 bg-white/5 p-4 rounded-lg">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-white">{candidate.name}</CardTitle>
+                            <div className="flex gap-2">
+                              <Edit className="h-4 w-4 text-white cursor-pointer" />
+                              <Trash2
+                                className="h-4 w-4 text-white cursor-pointer"
+                                onClick={() => handleRemoveCandidate(candidate.id, candidate.name)}
+                              />
                             </div>
                           </div>
-                          <div className="flex gap-2 mt-4">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="bg-white/10 border-white/20 text-white hover:bg-white/20 flex-1"
-                            >
-                              <Edit className="h-3 w-3 mr-1" />
-                              Edit
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleRemoveCandidate(candidate.id, candidate.name)}
-                              className="bg-red-600/20 border-red-500/30 text-red-400 hover:bg-red-600/30"
-                            >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              Remove
-                            </Button>
-                          </div>
-                        </CardContent>
+                          <CardDescription className="text-white/60">{candidate.bio}</CardDescription>
+                        </CardHeader>
                       </Card>
                     ))}
                   </div>

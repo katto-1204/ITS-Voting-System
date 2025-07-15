@@ -1,30 +1,44 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { useAuth } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { Vote, Shield } from "lucide-react"
 
 export function LoginForm() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [studentId, setStudentId] = useState("")
-  const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const { toast } = useToast()
+
+  const [studentEmail, setStudentEmail] = useState("")
+  const [studentPassword, setStudentPassword] = useState("")
+  const [studentId, setStudentId] = useState("")
+
+  const [adminEmail, setAdminEmail] = useState("")
+  const [adminPassword, setAdminPassword] = useState("")
+
+  const [loading, setLoading] = useState(false)
 
   const handleStudentLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
-    const success = await login(email, password, studentId)
+    const success = await login(studentEmail, studentPassword, studentId)
 
     if (success) {
       toast({
@@ -46,7 +60,7 @@ export function LoginForm() {
     e.preventDefault()
     setLoading(true)
 
-    const success = await login(email, password)
+    const success = await login(adminEmail, adminPassword)
 
     if (success) {
       toast({
@@ -67,6 +81,7 @@ export function LoginForm() {
   return (
     <div className="min-h-screen flex items-center justify-center mobile-padding py-8">
       <div className="w-full max-w-md">
+        {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Vote className="h-6 w-6 sm:h-8 sm:w-8 text-red-500" />
@@ -75,6 +90,7 @@ export function LoginForm() {
           <p className="text-white/80 mobile-text">Secure online voting platform</p>
         </div>
 
+        {/* Card */}
         <Card className="backdrop-blur-xl bg-white/10 border border-white/30 shadow-2xl">
           <CardHeader className="mobile-card">
             <CardTitle className="text-white text-lg sm:text-xl">Login to Vote</CardTitle>
@@ -93,94 +109,100 @@ export function LoginForm() {
                 </TabsTrigger>
               </TabsList>
 
+              {/* Student Form */}
               <TabsContent value="student" className="mt-4 sm:mt-6">
                 <form onSubmit={handleStudentLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="student-email" className="text-white mobile-text">
-                      Email
-                    </Label>
+                    <Label htmlFor="student-email" className="text-white mobile-text">Email</Label>
                     <Input
                       id="student-email"
                       type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
+                      value={studentEmail}
+                      onChange={(e) => setStudentEmail(e.target.value)}
                       placeholder="your.email@school.edu"
                       required
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
                     />
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="student-id" className="text-white mobile-text">
-                      Student ID
-                    </Label>
+                    <Label htmlFor="student-id" className="text-white mobile-text">Student ID</Label>
                     <Input
                       id="student-id"
                       value={studentId}
                       onChange={(e) => setStudentId(e.target.value)}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
                       placeholder="2024001234"
                       required
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
                     />
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="student-password" className="text-white mobile-text">
-                      Password
-                    </Label>
+                    <Label htmlFor="student-password" className="text-white mobile-text">Password</Label>
                     <Input
                       id="student-password"
                       type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
+                      value={studentPassword}
+                      onChange={(e) => setStudentPassword(e.target.value)}
                       required
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 h-10 sm:h-11" disabled={loading}>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-red-600 hover:bg-red-700 h-10 sm:h-11"
+                    disabled={loading}
+                  >
                     {loading ? "Logging in..." : "Login as Student"}
                   </Button>
                 </form>
               </TabsContent>
 
+              {/* Admin Form */}
               <TabsContent value="admin" className="mt-4 sm:mt-6">
                 <form onSubmit={handleAdminLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="admin-email" className="text-white mobile-text">
-                      Admin Email
-                    </Label>
+                    <Label htmlFor="admin-email" className="text-white mobile-text">Admin Email</Label>
                     <Input
                       id="admin-email"
                       type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
+                      value={adminEmail}
+                      onChange={(e) => setAdminEmail(e.target.value)}
                       placeholder="admin@school.edu"
                       required
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
                     />
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="admin-password" className="text-white mobile-text">
-                      Password
-                    </Label>
+                    <Label htmlFor="admin-password" className="text-white mobile-text">Password</Label>
                     <Input
                       id="admin-password"
                       type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
                       required
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-10 sm:h-11"
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 h-10 sm:h-11" disabled={loading}>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-red-600 hover:bg-red-700 h-10 sm:h-11"
+                    disabled={loading}
+                  >
                     {loading ? "Logging in..." : "Login as Admin"}
                   </Button>
                 </form>
               </TabsContent>
             </Tabs>
 
-            <div className="mt-4 text-center text-xs sm:text-sm text-white/60">
+            {/* Demo Credentials */}
+            <div className="mt-6 text-center text-xs sm:text-sm text-white/60 space-y-1">
               <p>Demo Credentials:</p>
-              <p className="text-xs">Student: any email + password + student ID</p>
-              <p className="text-xs">Admin: admin@school.edu / admin123</p>
+              <p>Student: any email + password + student ID</p>
+              <p>Admin: <code>admin@school.edu</code> + password</p>
             </div>
           </CardContent>
         </Card>
